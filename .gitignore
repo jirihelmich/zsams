@@ -42,3 +42,4 @@ access_log
 ehthumbs.db
 *[Tt]humbs.db
 *.Trashes
+.idea
