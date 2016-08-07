@@ -4,11 +4,27 @@
 		<!-- section -->
 		<section>
 
-			<h1><?php _e( 'Latest Posts', 'zsms' ); ?></h1>
+			<?php
 
-			<?php get_template_part('loop'); ?>
+			$source = array(
+				2 => "Základní škola",
+				3 => "Mateřská škola",
+				4 => "Školní družina"
+			);
 
-			<?php get_template_part('pagination'); ?>
+			foreach($source as $key => $label)
+			{
+				?>
+				<div>
+					<div><?php echo $label; ?></div>
+					<div>
+						<?php latest_article($key); ?>
+					</div>
+				</div>
+			<?php
+			}
+
+			?>
 
 		</section>
 		<!-- /section -->
