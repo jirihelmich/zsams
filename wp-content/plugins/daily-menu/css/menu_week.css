@@ -1,0 +1,61 @@
+@CHARSET "UTF-8";
+
+table.daily-menu {
+	border-width: 2px;
+	border-style: inset;
+	border-color: grey;
+}
+
+th.daily-menu {
+	text-align: center;
+	vertical-align: middle;
+	width: 155px;
+	height: 72px;
+	padding: 4px;
+	border-width: 1px;
+	border-style: inset;
+	border-color: grey;
+}
+
+td.daily-menu {
+	text-align: center;
+	vertical-align: middle;
+	width: 140px;
+	padding: 4px;
+	color: black;
+	border-width: 1px;
+	border-style: inset;
+	border-color: grey;
+}
+
+td.daily-menu_mouth {
+	font: bold normal 22px Arial, Helvetica, sans-serif;
+	color: red;
+	background-color: #DAEEF3;
+}
+
+th.daily-menu_day {
+	font: bold normal 20px Arial, Helvetica, sans-serif;
+	color: #400040;
+	background-color: #89FFBE;
+}
+
+th.daily-menu_dish {
+	height: 57px;
+	font: bold normal 18px Arial, Helvetica, sans-serif;
+	color: #000080;
+	background-color: #FDE9D9;
+}
+
+td.daily-menu_dish {
+	height: 57px;
+	font: bold normal 20px Arial, Helvetica, sans-serif;
+	color: Black;
+	background-color: #F9FDCF;
+}
+
+/*td.daily-menu_dessert{ width:155px;              padding:4px; font: bold normal 20px Arial, Helvetica, sans-serif; color:Black;    background-color:#F9FDCF; }
+td.daily-menu_ferie  { width:155px; height:57px; padding:4px; font: bold normal 20px Arial, Helvetica, sans-serif; color:Red;      background-color:#F9FDCF; }
+td.daily-menu_special{ width:155px; height:57px; padding:4px; font: bold normal 20px Arial, Helvetica, sans-serif; color:DarkGreen;background-color:#F9FDCF; }
+td.daily-menu_menus2 { width:155px; height:57px; padding:4px; font: bold normal 18px Arial, Helvetica, sans-serif; color:Black;    background-color:#F9FDCF; }
+*/

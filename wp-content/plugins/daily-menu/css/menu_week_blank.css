@@ -1,0 +1,28 @@
+@CHARSET "UTF-8";
+
+table.daily-menu {
+}
+
+th.daily-menu {
+}
+
+td.daily-menu {
+}
+
+td.daily-menu_mouth {
+}
+
+th.daily-menu_day {
+}
+
+th.daily-menu_dish {
+}
+
+td.daily-menu_dish {
+}
+
+/*td.daily-menu_dessert{ width:155px;              padding:4px; font: bold normal 20px Arial, Helvetica, sans-serif; color:Black;    background-color:#F9FDCF; }
+td.daily-menu_ferie  { width:155px; height:57px; padding:4px; font: bold normal 20px Arial, Helvetica, sans-serif; color:Red;      background-color:#F9FDCF; }
+td.daily-menu_special{ width:155px; height:57px; padding:4px; font: bold normal 20px Arial, Helvetica, sans-serif; color:DarkGreen;background-color:#F9FDCF; }
+td.daily-menu_menus2 { width:155px; height:57px; padding:4px; font: bold normal 18px Arial, Helvetica, sans-serif; color:Black;    background-color:#F9FDCF; }
+*/
