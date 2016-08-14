@@ -3,7 +3,7 @@
 * Package: wp-photo-album-plus
 *
 * display the widget
-* Version 6.5.00
+* Version 6.5.04
 */
 
 if ( ! defined( 'ABSPATH' ) ) die( "Can't load this file directly" );
@@ -54,10 +54,10 @@ class PhotoOfTheDay extends WP_Widget {
 			$w 			= wppa_opt( 'potd_widget_width' );
 			$ratio 		= wppa_get_photoy( $id ) / wppa_get_photox( $id );
 			$h 			= round( $w * $ratio );
-			$usethumb	= wppa_use_thumb_file( $id, wppa_opt( 'widget_width' ), '0' );
+			$usethumb	= wppa_use_thumb_file( $id, wppa_opt( 'potd_widget_width' ), '0' );
 			$imgurl 	= wppa_fix_poster_ext( $usethumb ? wppa_get_thumb_url( $id, '', $w, $h ) : wppa_get_photo_url( $id, '', $w, $h ), $id );
 			$name 		= wppa_get_photo_name( $id );
-			$page 		= ( in_array( wppa_opt( 'widget_linktype' ), wppa( 'links_no_page' ) ) && ! wppa_switch( 'widget_counter' ) ) ? '' : wppa_get_the_landing_page( 'widget_linkpage', __('Photo of the day', 'wp-photo-album-plus') );
+			$page 		= ( in_array( wppa_opt( 'potd_linktype' ), wppa( 'links_no_page' ) ) && ! wppa_switch( 'potd_counter' ) ) ? '' : wppa_get_the_landing_page( 'potd_linkpage', __('Photo of the day', 'wp-photo-album-plus') );
 			$link 		= wppa_get_imglnk_a( 'potdwidget' , $id );
 			$is_video 	= wppa_is_video( $id );
 			$has_audio 	= wppa_has_audio( $id );
@@ -67,7 +67,8 @@ class PhotoOfTheDay extends WP_Widget {
 							' data-videonatwidth="'.wppa_get_videox( $id ).'"' .
 							' data-videonatheight="'.wppa_get_videoy( $id ).'"' : '' ) .
 							( $has_audio ? ' data-audiohtml="' . esc_attr( wppa_get_audio_body( $id ) ) . '"' : '' ) .
-							' ' . wppa( 'rel' ) . '="' . wppa_opt( 'lightbox_name' ) . '"';
+							' ' . wppa( 'rel' ) . '="' . wppa_opt( 'lightbox_name' ) . '"' .
+							' data-alt="' . esc_attr( wppa_get_imgalt( $id, true ) ) . '"';
 			}
 			else {
 				$lightbox = '';
@@ -101,7 +102,7 @@ class PhotoOfTheDay extends WP_Widget {
 					$widget_content .= "\n\t\t".wppa_get_video_html( array ( 	'id' 		=> $id,
 																				'width' 	=> wppa_opt( 'potd_widget_width' ),
 																				'title' 	=> $title,
-																				'controls' 	=> ( wppa_opt( 'widget_linktype' ) == 'none' ),
+																				'controls' 	=> ( wppa_opt( 'potd_linktype' ) == 'none' ),
 																				'cursor' 	=> $cursor
 																	));
 				}
@@ -115,23 +116,30 @@ class PhotoOfTheDay extends WP_Widget {
 				}
 
 			// Close the link
-			if ($link) $widget_content .= "\n\t".'</a>';
+			if ( $link ) $widget_content .= '</a>';
 
 			// The medal if at the bottom
 			$widget_content .= wppa_get_medal_html_a( array( 'id' => $id, 'size' => 'M', 'where' => 'bot' ) );
 
 			// The counter
-			if ( wppa_switch( 'widget_counter' ) ) { 	// If we want this
+			if ( wppa_switch( 'potd_counter' ) ) { 	// If we want this
 				$alb = wppa_get_photo_item( $id, 'album' );
 				$c = $wpdb->get_var( "SELECT COUNT(*) FROM `" . WPPA_PHOTOS . "` WHERE `album` = " . $alb ) - 1;
 				if ( $c > 0 ) {
 					if ( wppa_opt( 'potd_counter_link' ) == 'thumbs' ) {
 						$lnk = wppa_get_album_url( $alb, $page, 'thumbs', '1' );
 					}
-					else {
+					elseif ( wppa_opt( 'potd_counter_link' ) == 'slide' ) {
 						$lnk = wppa_get_slideshow_url( $alb, $page, $id, '1' );
 					}
-					$lnk =
+					elseif ( wppa_opt( 'potd_counter_link' ) == 'single' ) {
+						$lnk = wppa_encrypt_url( get_permalink( $page ) . '?occur=1&photo=' . $id );
+					//	wppa_get_image_page_url_by_id( $id, true, false, $page );
+					}
+					else {
+						wppa_log( 'Err', 'Unimplemented counter link type in wppa-potd-widget: ' . wppa_opt( 'potd_counter_link' ) );
+					}
+
 					$widget_content .= 	'<a href="' . $lnk . '" >' .
 											'<div style="font-size:12px;position:absolute;right:4px;bottom:4px;" >+' . $c . '</div>' .
 										'</a>';
@@ -153,26 +161,25 @@ class PhotoOfTheDay extends WP_Widget {
 		$widget_content .= "\n".'</div>';
 
 		// Add subtitle, if any
-		switch ( wppa_opt( 'widget_subtitle' ) ) {
-			case 'none':
-				break;
-			case 'name':
-				if ($image && $image['name'] != '') {
-					$widget_content .= "\n".'<div class="wppa-widget-text wppa-potd-text" style="'.$align.'">' . wppa_get_photo_name( $id ) . '</div>';
-				}
-				break;
-			case 'desc':
-				if ($image && $image['description'] != '') {
+		if ( $image ) {
+			switch ( wppa_opt( 'potd_subtitle' ) ) {
+				case 'none':
+					break;
+				case 'name':
+					$widget_content .= '<div class="wppa-widget-text wppa-potd-text" style="'.$align.'">' . wppa_get_photo_name( $id ) . '</div>';
+					break;
+				case 'desc':
 					$widget_content .= "\n".'<div class="wppa-widget-text wppa-potd-text" style="'.$align.'">' . wppa_get_photo_desc( $id ) . '</div>';
-				}
-				break;
-			case 'owner':
-				if ( $image ) {
+					break;
+				case 'owner':
 					$owner = $image['owner'];
 					$user = get_user_by('login', $owner);
 					$owner = $user->display_name;
 					$widget_content .= "\n".'<div class="wppa-widget-text wppa-potd-text" style="'.$align.'">'.__('By:', 'wp-photo-album-plus').' ' . $owner . '</div>';
-				}
+					break;
+				default:
+					wppa_log( 'Err', 'Unimplemented potd_subtitle found in wppa-potd-widget: ' . wppa_opt( 'potd_subtitle' ) );
+			}
 		}
 
 		$widget_content .= '<div style="clear:both;" ></div>';
@@ -187,18 +194,18 @@ class PhotoOfTheDay extends WP_Widget {
     }
 
     /** @see WP_Widget::update */
-    function update($new_instance, $old_instance) {
+    function update( $new_instance, $old_instance ) {
 		$instance = $old_instance;
-		$instance['title'] = strip_tags($new_instance['title']);
+		$instance['title'] = strip_tags( $new_instance['title'] );
 
         return $instance;
     }
 
     /** @see WP_Widget::form */
-    function form($instance) {
+    function form( $instance ) {
 
 		//Defaults
-		$instance = wp_parse_args( (array) $instance, array( 'title' => wppa_opt( 'widgettitle') ) );
+		$instance = wp_parse_args( (array) $instance, array( 'title' => wppa_opt( 'potd_title') ) );
 		$widget_title = $instance['title'];
 		?>
 			<p><label for="<?php echo $this->get_field_id('title'); ?>"><?php _e('Title:', 'wp-photo-album-plus'); ?></label> <input class="widefat" id="<?php echo $this->get_field_id('title'); ?>" name="<?php echo $this->get_field_name('title'); ?>" type="text" value="<?php echo $widget_title; ?>" /></p>
@@ -208,11 +215,11 @@ class PhotoOfTheDay extends WP_Widget {
 
 } // class PhotoOfTheDay
 
-require_once ('wppa-widget-functions.php');
+require_once 'wppa-widget-functions.php';
 
 // register PhotoOfTheDay widget
-add_action('widgets_init', 'wppa_register_PhotoOfTheDay' );
+add_action( 'widgets_init', 'wppa_register_PhotoOfTheDay' );
 
 function wppa_register_PhotoOfTheDay() {
-	register_widget("PhotoOfTheDay");
+	register_widget( 'PhotoOfTheDay' );
 }

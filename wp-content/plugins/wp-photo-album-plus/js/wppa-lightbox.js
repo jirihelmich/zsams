@@ -3,7 +3,7 @@
 // Conatins lightbox modules
 // Dependancies: wppa.js and default wp jQuery library
 //
-var wppaLightboxVersion = '6.4.19';
+var wppaLightboxVersion = '6.5.04';
 
 // Global inits
 var wppaNormsBtnOpac = 1;
@@ -210,6 +210,7 @@ wppaConsoleLog( 'wppaOvlShow arg='+arg );
 		// Init the set
 		wppaOvlUrls 				= [];
 		wppaOvlTitles 				= [];
+		wppaOvlAlts 				= [];
 		wppaOvlVideoHtmls 			= [];
 		wppaOvlAudioHtmls 			= [];
 		wppaOvlVideoNaturalWidths 	= [];
@@ -257,6 +258,7 @@ wppaConsoleLog( 'wppaOvlShow arg='+arg );
 						else {
 							wppaOvlTitles[j] = wppaRepairScriptTags( anchor.title );
 						}
+						wppaOvlAlts[j] 					= jQuery( anchor ).attr( 'data-alt' ) ? jQuery( anchor ).attr( 'data-alt' ) : '';
 						wppaOvlVideoHtmls[j] 			= jQuery( anchor ).attr( 'data-videohtml' ) ? decodeURI( jQuery( anchor ).attr( 'data-videohtml' ) ) : '';
 						wppaOvlAudioHtmls[j] 			= jQuery( anchor ).attr( 'data-audiohtml' ) ? decodeURI( jQuery( anchor ).attr( 'data-audiohtml' ) ) : '';
 						wppaOvlVideoNaturalWidths[j] 	= jQuery( anchor ).attr( 'data-videonatwidth' ) ? jQuery( anchor ).attr( 'data-videonatwidth' ) : '';
@@ -279,6 +281,7 @@ wppaConsoleLog( 'wppaOvlShow arg='+arg );
 			else {
 				wppaOvlTitles[0] = wppaRepairScriptTags( arg.title );
 			}
+			wppaOvlAlts[0] 					= jQuery( arg ).attr( 'data-alt' ) ? jQuery( arg ).attr( 'data-alt' ) : '';
 			wppaOvlVideoHtmls[0] 			= jQuery( arg ).attr( 'data-videohtml' ) ? decodeURI( jQuery( arg ).attr( 'data-videohtml' ) ) : '';
 			wppaOvlAudioHtmls[0] 			= jQuery( arg ).attr( 'data-audiohtml' ) ? decodeURI( jQuery( arg ).attr( 'data-audiohtml' ) ) : '';
 			wppaOvlVideoNaturalWidths[0] 	= jQuery( arg ).attr( 'data-videonatwidth' ) ? jQuery( arg ).attr( 'data-videonatwidth' ) : '';
@@ -303,7 +306,7 @@ wppaConsoleLog( 'wppaOvlShow arg='+arg );
 function _wppaOvlShow( idx ) {
 wppaConsoleLog( '_wppaOvlShow, idx='+idx );
 
-	// Globalize indesx
+	// Globalize index
 	wppaOvlCurIdx = idx;
 
 	// Show spinner
@@ -383,7 +386,9 @@ wppaConsoleLog( '_wppaOvlShow, idx='+idx );
 					' ontouchcancel="wppaTouchCancel( event );"' +
 					' onpause="wppaOvlVideoPlaying = false;"' +
 					' onplay="wppaOvlVideoPlaying = true;"' +
-					' style="border:none; width:'+jQuery( window ).width()+'px; box-shadow:none; position:absolute;" >'+
+					' style="border:none; width:'+jQuery( window ).width()+'px; box-shadow:none; position:absolute;"' +
+					' alt="'+wppaOvlAlts[idx]+'"' +
+					' >'+
 						wppaOvlVideoHtmls[idx]+
 				'</video>'+
 				'<div style="height: 20px; width: 100%; position:absolute; top:0; left:0;" onmouseover="jQuery(\'#wppa-ovl-legenda-2\').css(\'visibility\',\'visible\');" onmouseout="jQuery(\'#wppa-ovl-legenda-2\').css(\'visibility\',\'hidden\');wppaShowLegenda=\'hidden\';" >';
@@ -408,6 +413,7 @@ wppaConsoleLog( '_wppaOvlShow, idx='+idx );
 					' ontouchcancel="wppaTouchCancel( event );"'+
 					' src="'+wppaOvlUrls[idx]+'"'+
 					' style="border:none; width:'+jQuery( window ).width()+'px; visibility:hidden; box-shadow:none; position:absolute;"'+
+					' alt="'+wppaOvlAlts[idx]+'"'+
 				' />';
 				if ( wppaHasAudio ) {
 				html += '<audio' +
@@ -517,8 +523,8 @@ wppaConsoleLog( '_wppaOvlShow, idx='+idx );
 
 				html += '<video' +
 							' id="wppa-overlay-img"' +
-						' onmouseover="jQuery(\'.wppa-ovl-nav-btn\').stop().fadeTo(200,0.8);"' +
-						' onmouseout="jQuery(\'.wppa-ovl-nav-btn\').stop().fadeTo(200,0);"' +
+							' onmouseover="jQuery(\'.wppa-ovl-nav-btn\').stop().fadeTo(200,0.8);"' +
+							' onmouseout="jQuery(\'.wppa-ovl-nav-btn\').stop().fadeTo(200,0);"' +
 							' preload="metadata"' +
 							( wppaOvlVideoStart ? ' autoplay' : '' ) +
 							' onpause="wppaOvlVideoPlaying = false;"' +
@@ -542,6 +548,7 @@ wppaConsoleLog( '_wppaOvlShow, idx='+idx );
 								'margin:0;' +
 								'padding:0;' +
 							'"' +
+							' alt="'+wppaOvlAlts[idx]+'"' +
 							' >' +
 							wppaOvlVideoHtmls[idx] +
 						'</video>';
@@ -553,8 +560,8 @@ wppaConsoleLog( '_wppaOvlShow, idx='+idx );
 			else {
 				html += '<img' +
 							' id="wppa-overlay-img"'+
-						' onmouseover="jQuery(\'.wppa-ovl-nav-btn\').stop().fadeTo(200,0.8);"' +
-						' onmouseout="jQuery(\'.wppa-ovl-nav-btn\').stop().fadeTo(200,0);"' +
+							' onmouseover="jQuery(\'.wppa-ovl-nav-btn\').stop().fadeTo(200,0.8);"' +
+							' onmouseout="jQuery(\'.wppa-ovl-nav-btn\').stop().fadeTo(200,0);"' +
 							' ontouchstart="wppaTouchStart( event, \'wppa-overlay-img\', -1 );"' +
 							' ontouchend="wppaTouchEnd( event );"' +
 							' ontouchmove="wppaTouchMove( event );"' +
@@ -574,6 +581,7 @@ wppaConsoleLog( '_wppaOvlShow, idx='+idx );
 								'margin:0;' +
 								'padding:0;' +
 								'"' +
+							' alt="'+wppaOvlAlts[idx]+'"' +
 						' />';
 
 				// Audio on not fullsize

@@ -3,7 +3,7 @@
 * Package: wp-photo-album-plus
 *
 * Various functions
-* Version 6.5.03
+* Version 6.5.04
 *
 */
 
@@ -2154,6 +2154,17 @@ static $user;
 	// Audio html
 	$audiohtml = wppa_get_audio_body( $id );
 
+	// Image alt
+	$image_alt = esc_js( wppa_get_imgalt( $id, true ) );
+
+	// Poster url if video
+	$poster_url = '';
+	if ( wppa_is_video( $id ) ) {
+		if ( is_file( wppa_fix_poster_ext( wppa_get_photo_path( $id ), $id ) ) ) {
+			$poster_url = wppa_fix_poster_ext( wppa_get_photo_url( $id ), $id );
+		}
+	}
+
 	// Produce final result
     $result = "'".wppa( 'mocc' )."','";
 	$result .= $index."','";
@@ -2185,7 +2196,9 @@ static $user;
 	$result .= $hiresurl."','";
 	$result .= $videohtml."','";
 	$result .= $audiohtml."','";
-	$result .= $wait_text."'";
+	$result .= $wait_text."','";
+	$result .= $image_alt."','";
+	$result .= $poster_url."'";
 
 	// This is an ingenious line of code that is going to prevent us from very much trouble.
 	// Created by OpaJaap on Jan 15 2012, 14:36 local time. Thanx.
@@ -3692,6 +3705,7 @@ function wppa_mphoto() {
 								( $link['target'] ? ' target="' . $link['target'] . '"' : '' ) .
 								' class="thumb-img"' .
 								' id="a-' . $id . '-' . wppa( 'mocc' ) . '"' .
+								' data-alt="' . esc_attr( wppa_get_imgalt( $id, true ) ) . '"' .
 								' >'
 						);
 			}
@@ -3880,6 +3894,7 @@ function wppa_sphoto() {
 								( $link['target'] ? ' target="' . $link['target'] . '"' : '' ) .
 								' class="thumb-img"' .
 								' id="a-' . $id . '-' . wppa( 'mocc' ) . '"' .
+								' data-alt="' . esc_attr( wppa_get_imgalt( $id, true ) ) . '"' .
 								' >'
 						);
 			}

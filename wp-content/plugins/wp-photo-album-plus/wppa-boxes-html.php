@@ -3,7 +3,7 @@
 * Package: wp-photo-album-plus
 *
 * Various wppa boxes
-* Version 6.5.03
+* Version 6.5.04
 *
 */
 
@@ -1652,10 +1652,10 @@ function wppa_user_destroy_html( $alb, $width, $where, $rsp ) {
 				' onclick="' .
 					'jQuery(this).html(\'' . __( 'Working...', 'wp-photo-album-plus' ) . '\');' .
 					'wppaAjaxDestroyAlbum(' . $alb . ',\'' . wp_create_nonce( 'wppa_nonce_' . $alb ) . '\');' .
-					'jQuery(this).html(\'' . __( 'Delete album', 'wp-photo-album-plus' ) . '\');' .
+					'jQuery(this).html(\'' . __( 'Delete Album', 'wp-photo-album-plus' ) . '\');' .
 					'"' .
 				' >' .
-				__( 'Delete album', 'wp-photo-album-plus' ) .
+				__( 'Delete Album', 'wp-photo-album-plus' ) .
 			'</a>' .
 		'</div>'
 	);
@@ -1747,7 +1747,7 @@ function wppa_get_user_create_html( $alb, $width, $where = '', $mcr = false ) {
 				'"' .
 			' style="float:left; cursor:pointer;"' .
 			'> ' .
-			__( 'Create Album', 'wp-photo-album-plus' ) .
+			( $alb ? __( 'Create Sub Album', 'wp-photo-album-plus' ) : __( 'Create Album', 'wp-photo-album-plus' ) ) .
 		'</a>' .
 		'<a' .
 			' id="_wppa-cr-' . str_replace('.','-',$alb) . '-' . $mocc . '"' .
@@ -2590,7 +2590,7 @@ function wppa_user_albumedit_html( $alb, $width, $where = '', $mcr = false ) {
 									'jQuery( \'#_wppa-ea-'.str_replace('.','-',$alb).'-'.wppa( 'mocc' ).'\' ).css( \'display\',\'block\' );'. 		// Show backlink
 									'_wppaDoAutocol( ' . wppa( 'mocc' ) . ' )' .													// Trigger autocol
 									'" style="float:left; cursor:pointer;">
-		'.__( 'Edit albuminfo', 'wp-photo-album-plus' ).'
+		'.__( 'Edit Album Info', 'wp-photo-album-plus' ).'
 	</a>
 	<a id="_wppa-ea-'.str_replace('.','-',$alb).'-'.wppa( 'mocc' ).'" class="wppa-aedit-'.$where.' wppa-album-'.$where.'-link" onclick="'.
 									'jQuery( \'#wppa-fe-div-'.str_replace('.','-',$alb).'-'.wppa( 'mocc' ).'\' ).css( \'display\',\'none\' );'.		// Hide the Edit form

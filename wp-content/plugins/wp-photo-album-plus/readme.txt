@@ -2,8 +2,8 @@
 Contributors: opajaap
 Donate link: https://www.paypal.com/cgi-bin/webscr?cmd=_donations&business=OpaJaap@OpaJaap.nl&item_name=WP-Photo-Album-Plus&item_number=Support-Open-Source&currency_code=USD&lc=US
 Tags: photo, album, gallery, slideshow, video, audio, lightbox, iptc, exif, cloudinary, fotomoto
-Version: 6.5.03
-Stable tag: 6.5.02
+Version: 6.5.04
+Stable tag: 6.5.04
 Author: J.N. Breetvelt
 Author URI: http://www.opajaap.nl/
 Requires at least: 3.9
@@ -179,6 +179,20 @@ Oh, just Google on 'picture resizer' and you will find a bunch of free programs 
 == Changelog ==
 
 See for additional information: http://www.wppa.nl/changelog/
+
+= 6.4.04 =
+
+= Bug Fixes =
+
+* The spinner while waiting for album download did not work when encryoted links was active. Fixed.
+* Fixed alt attribute in slideshows and lightbox.
+* Poster images for videos are now also applied to videos in a slideshow.
+
+= Other Changes =
+
+* Various textual enhancements.
+* The photo of the day admin page has been rewritten and is now in the style of the settings page. Includes a few enhancements to the settings.
+* Incomplete comments are marked as spam. To avoid eventual auto deletion when they are correct, they will now also be reported as requiring moderation on the main menu.
 
 = 6.5.03 =
 

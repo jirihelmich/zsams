@@ -3,7 +3,7 @@
 * Package: wp-photo-album-plus
 *
 * Contains low-level utility routines
-* Version 6.5.03
+* Version 6.5.04
 *
 */
 
@@ -914,9 +914,9 @@ static $existing_albums;
 	return in_array( $id, $existing_albums );
 }
 
-function wppa_photo_exists($id) {
+function wppa_photo_exists( $id ) {
 global $wpdb;
-	return $wpdb->get_var($wpdb->prepare("SELECT COUNT(*) FROM `".WPPA_PHOTOS."` WHERE `id` = %s", $id));
+	return $wpdb->get_var( $wpdb->prepare("SELECT COUNT(*) FROM `".WPPA_PHOTOS."` WHERE `id` = %s", $id ) );
 }
 
 function wppa_albumphoto_exists($alb, $photo) {
@@ -1115,27 +1115,41 @@ function wppa_send_mail( $to, $subj, $cont, $photo, $email = '' ) {
 
 }
 
-function wppa_get_imgalt( $id ) {
+function wppa_get_imgalt( $id, $lb = false ) {
 
-	$thumb = wppa_cache_thumb($id);
+	// Get photo data
+	$thumb = wppa_cache_thumb( $id );
+
+	// Get raw image alt data
 	switch ( wppa_opt( 'alt_type' ) ) {
 		case 'fullname':
-			$result = esc_attr( wppa_get_photo_name( $id ) );
+			$result = wppa_get_photo_name( $id );
 			break;
 		case 'namenoext':
-			$temp = wppa_get_photo_name( $id );
-			$temp = preg_replace( '/\.[^.]*$/', '', $temp );	// Remove file extension
-			$result = esc_attr( $temp );
+			$result = wppa_strip_ext( wppa_get_photo_name( $id ) );
 			break;
 		case 'custom':
-			$result = esc_attr( $thumb['alt'] );
+			$result = $thumb['alt'];
 			break;
 		default:
 			$result = $id;
 			break;
 	}
-	if ( ! $result ) $result = '0';
-	return ' alt="'.$result.'" ';
+
+	// Default if empty result
+	if ( ! $result ) {
+		$result = '0';
+	}
+
+	// Format for use in lightbox or direct use html
+	if ( $lb ) {
+		$result = esc_attr( str_replace( '"', "'", $result ) );
+	}
+	else {
+		$result = ' alt="' . esc_attr( $result ) . '" ';
+	}
+
+	return $result;
 }
 
 // Flush treecounts of album $alb, default: clear all
@@ -1388,29 +1402,15 @@ function wppa_strip_tags($text, $key = '') {
 }
 
 // set last album
-function wppa_set_last_album($id = '') {
-    global $albumid;
+function wppa_set_last_album( $id = '' ) {
 
-	$opt = 'wppa_last_album_used-'.wppa_get_user('login');
-
-	if ( is_numeric($id) && wppa_have_access($id) ) $albumid = $id; else $albumid = '';
-
-    wppa_update_option($opt, $albumid);
+    update_option( 'wppa_last_album_used-' . wppa_get_user( 'login' ), $albumid );
 }
 
 // get last album
 function wppa_get_last_album() {
-global $albumid;
 
-    if ( is_numeric( $albumid ) ) $result = $albumid;
-    else {
-		$opt = 'wppa_last_album_used-'.wppa_get_user('login');
-		$result = get_option($opt, get_option('wppa_last_album_used', ''));
-	}
-    if ( !is_numeric( $result ) ) $result = '';
-    else $albumid = $result;
-
-	return $result;
+    return get_option( 'wppa_last_album_used-' . wppa_get_user( 'login' ) );
 }
 
 // Combine margin or padding style

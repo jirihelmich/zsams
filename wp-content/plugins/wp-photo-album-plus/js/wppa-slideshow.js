@@ -3,7 +3,7 @@
 // Contains slideshow modules
 // Dependancies: wppa.js and default wp jQuery library
 //
-var wppaJsSlideshowVersion = '6.5.02';
+var wppaJsSlideshowVersion = '6.5.04';
 
 // This is an entrypoint to load the slide data
 function wppaStoreSlideInfo(
@@ -36,7 +36,9 @@ function wppaStoreSlideInfo(
 							hiresurl, 		// The url to the hi res ( source ) image file
 							videohtml, 		// The html for the video, or ''
 							audiohtml,
-							waittext 		// The time you have to wait before you can vote again on the photo
+							waittext, 		// The time you have to wait before you can vote again on the photo
+							imagealt,
+							posterurl
 							) {
 
 	var cursor;
@@ -86,6 +88,7 @@ function wppaStoreSlideInfo(
 		wppaVideoPlaying[mocc] = false;
 		wppaAudioPlaying[mocc] = false;
 		_wppaWaitTexts[mocc] = [];
+		_wppaImageAlt[mocc] = [];
 	}
 
 	// Cursor
@@ -102,13 +105,16 @@ function wppaStoreSlideInfo(
 
 	// Fill _wppaSlides[mocc][id]
 	if ( _wppaIsVideo[mocc][id] ) {
-		_wppaSlides[mocc][id] = ' alt="' + wppaTrimAlt( name ) + '" class="theimg theimg-'+mocc+' big" ';
+		_wppaSlides[mocc][id] = ' alt="' + imagealt + '" class="theimg theimg-'+mocc+' big" ';
 		if ( wppaSlideVideoStart && wppaLightBox[mocc] == '' ) {
 			_wppaSlides[mocc][id] += ' autoplay ';
 		}
+		if ( posterurl.length > 0 ) {
+			_wppaSlides[mocc][id] += ' poster="' + posterurl + '" ';
+		}
 	}
 	else {
-		_wppaSlides[mocc][id] = ' src="' + url + '" alt="' + wppaTrimAlt( name ) + '" class="theimg theimg-'+mocc+' big stereo" ';
+		_wppaSlides[mocc][id] = ' src="' + url + '" alt="' + imagealt + '" class="theimg theimg-'+mocc+' big stereo" ';
 	}
 
 	// Add swipe
@@ -176,6 +182,7 @@ function wppaStoreSlideInfo(
 	_wppaVideoNatWidth[mocc][id] = width;
 	_wppaVideoNatHeight[mocc][id] = height;
 	_wppaWaitTexts[mocc][id] = waittext;
+	_wppaImageAlt[mocc][id] = imagealt;
 }
 
 // These functions check the validity and store the users request to be executed later if busy and if applicable.
@@ -1790,7 +1797,7 @@ function _wppaShowMetaData( mocc, key ) {
 }
 
 function wppaGetSlideshowTimeout( mocc ) {
-	
+
 	var time;
 	if ( _wppaTimeOut[mocc] == 'random' ) {
 		var min = 2 * wppaAnimationSpeed;

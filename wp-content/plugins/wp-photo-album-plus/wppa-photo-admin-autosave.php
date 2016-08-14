@@ -101,7 +101,7 @@ global $wpdb;
 		}
 		else {
 			// Photos with pending comments?
-			$cmt = $wpdb->get_results( "SELECT `photo` FROM `".WPPA_COMMENTS."` WHERE `status` = 'pending'", ARRAY_A );
+			$cmt = $wpdb->get_results( "SELECT `photo` FROM `".WPPA_COMMENTS."` WHERE `status` = 'pending' OR `status` = 'spam'", ARRAY_A );
 
 			if ( $cmt ) {
 				$orphotois = '';

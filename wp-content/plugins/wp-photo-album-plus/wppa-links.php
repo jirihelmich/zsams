@@ -3,7 +3,7 @@
 * Package: wp-photo-album-plus
 *
 * Frontend links
-* Version 6.5.00
+* Version 6.5.04
 *
 */
 
@@ -155,20 +155,20 @@ global $wppa_lang;
 }
 
 // get page url of current album image
-function wppa_get_image_page_url_by_id( $id, $single = false, $alb = false ) {
+function wppa_get_image_page_url_by_id( $id, $single = false, $alb = false, $page = null ) {
 
 	if ( ! is_numeric( $id ) || $id < '1' ) wppa_dbg_msg( 'Invalid arg wppa_get_image_page_url_by_id(' . $id . ')', 'red' );
 
 	$thumb = wppa_cache_thumb( $id );
 
 	$occur = wppa_in_widget() ? wppa( 'widget_occur' ) : wppa( 'occur' );
-	$w = wppa_in_widget() ? 'w' : '';
+	$w = wppa_in_widget() && ! $page ? 'w' : '';
 
 	if ( ! $alb ) $alb = $thumb['album'];
 
 	if ( ! $occur ) $occur = '1';
 
-	$result = wppa_get_permalink().'wppa-album='.$alb.'&amp;wppa-photo='.$thumb['id'].'&amp;wppa-cover=0&amp;wppa-'.$w.'occur='.$occur;
+	$result = wppa_get_permalink($page).'wppa-album='.$alb.'&amp;wppa-photo='.$thumb['id'].'&amp;wppa-cover=0&amp;wppa-'.$w.'occur='.$occur;
 	if ( $single ) $result .= '&amp;wppa-single=1';
 
 	return wppa_encrypt_url( $result );
@@ -1097,9 +1097,24 @@ function wppa_album_download_link( $albumid ) {
 
 	if ( ! wppa_switch( 'allow_download_album' ) ) return;	// Not enabled
 
-	wppa_out( '<div style="clear:both;" ></div>' );
-	wppa_out( '<a onclick="wppaAjaxDownloadAlbum('.wppa( 'mocc' ).', \''.wppa_encrypt_album($albumid).'\' );" style="cursor:pointer;" class="wppa-album-cover-link" title="'.__('Download', 'wp-photo-album-plus').'">'.__('Download album', 'wp-photo-album-plus').'</a>' );
-	wppa_out( '<img id="dwnspin-'.wppa( 'mocc' ).'-'.$albumid.'" src="'.wppa_get_imgdir().'wpspin.gif" style="margin-left:6px; display:none;" alt="spin" />' );
+	$result =
+	'<div style="clear:both;" ></div>' .
+	'<a' .
+		' onclick="wppaAjaxDownloadAlbum(' . wppa( 'mocc' ) . ', \'' . wppa_encrypt_album( $albumid ) . '\' );"' .
+		' style="cursor:pointer;"' .
+		' class="wppa-album-cover-link"' .
+		' title="' . esc_attr( __('Download', 'wp-photo-album-plus') ).'" ' .
+		'>' .
+		__( 'Download Album', 'wp-photo-album-plus' ) .
+	'</a>' .
+	'<img' .
+		' id="dwnspin-' . wppa( 'mocc' ) . '-' . wppa_encrypt_album( $albumid ) . '"' .
+		' src="' . wppa_get_imgdir() . 'wpspin.gif"' .
+		' style="margin-left:6px; display:none;"' .
+		' alt="spin"' .
+	' />';
+
+	wppa_out( $result );
 }
 
 function wppa_get_imglnk_a( $wich, $id, $lnk = '', $tit = '', $onc = '', $noalb = false, $album = '' ) {
@@ -1200,8 +1215,8 @@ global $wpdb;
 			}
 			break;
 		case 'potdwidget':
-			$type = wppa_opt( 'widget_linktype' );
-			$page = wppa_opt( 'widget_linkpage' );
+			$type = wppa_opt( 'potd_linktype' );
+			$page = wppa_opt( 'potd_linkpage' );
 			if ( $page == '0' ) $page = '-1';
 			if ( wppa_switch( 'potd_blank' ) ) $result['target'] = '_blank';
 			break;

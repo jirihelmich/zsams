@@ -3,7 +3,7 @@
 * Package: wp-photo-album-plus
 *
 * Contains the admin menu and startups the admin pages
-* Version 6.5.03
+* Version 6.5.04
 *
 */
 
@@ -35,7 +35,7 @@ function wppa_add_admin() {
 
 	// See if there are comments pending moderation
 	$com_pending = '';
-	$com_pending_count = $wpdb->get_var( "SELECT COUNT(*) FROM `".WPPA_COMMENTS."` WHERE `status` = 'pending'" );
+	$com_pending_count = $wpdb->get_var( "SELECT COUNT(*) FROM `".WPPA_COMMENTS."` WHERE `status` = 'pending' OR `status` = 'spam'" );
 	if ( $com_pending_count ) $com_pending = '<span class="update-plugins"><span class="plugin-count">'.$com_pending_count.'</span></span>';
 
 	// See if there are uploads pending moderation
@@ -145,7 +145,7 @@ function wppa_page_options() {
 }
 // Photo of the day admin page
 function wppa_sidebar_page_options() {
-	require_once 'wppa-widget-admin.php';
+	require_once 'wppa-potd-admin.php';
 	wppa_publish_scheduled();
 	_wppa_sidebar_page_options();
 }

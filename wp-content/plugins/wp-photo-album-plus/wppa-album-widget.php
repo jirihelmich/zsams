@@ -3,7 +3,7 @@
 * Package: wp-photo-album-plus
 *
 * display thumbnail albums
-* Version 6.4.17
+* Version 6.5.04
 */
 
 if ( ! defined( 'ABSPATH' ) ) die( "Can't load this file directly" );
@@ -172,13 +172,15 @@ class AlbumWidget extends WP_Widget {
 								$has_audio 	= wppa_has_audio( $thumb['id'] );
 
 								$widget_content .= "\n\t" .
-										'<a href="'.$link.'"' .
+									'<a href="'.$link.'"' .
 										( $is_video ? ' data-videohtml="' . esc_attr( wppa_get_video_body( $thumb['id'] ) ) . '"' .
 										' data-videonatwidth="'.wppa_get_videox( $thumb['id'] ).'"' .
 										' data-videonatheight="'.wppa_get_videoy( $thumb['id'] ).'"' : '' ) .
 										( $has_audio ? ' data-audiohtml="' . esc_attr( wppa_get_audio_body( $thumb['id'] ) ) . '"' : '' ) .
 										' ' . wppa( 'rel' ) . '="'.wppa_opt( 'lightbox_name' ).'[alw-'.wppa( 'mocc' ).'-'.$album['id'].']"' .
-										' ' . wppa( 'lbtitle' ) . '="'.$title.'" >';
+										' ' . wppa( 'lbtitle' ) . '="'.$title.'"' .
+										' data-alt="' . esc_attr( wppa_get_imgalt( $thumb['id'], true ) ) . '"' .
+										' >';
 								if ( $thumb['id'] == $image['id'] ) {		// the cover image
 									if ( wppa_is_video( $image['id'] ) ) {
 										$widget_content .= wppa_get_video_html( array( 	'id' 			=> $image['id'],

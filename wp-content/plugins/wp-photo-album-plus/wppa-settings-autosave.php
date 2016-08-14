@@ -3,7 +3,7 @@
 * Package: wp-photo-album-plus
 *
 * manage all options
-* Version 6.5.03
+* Version 6.5.04
 *
 */
 
@@ -270,10 +270,8 @@ global $wp_version;
 	<div class="wrap">
 		<?php wppa_admin_spinner() ?>
 		<?php $iconurl = WPPA_URL.'/images/settings32.png'; ?>
-		<div id="icon-album" class="icon32" style="background: transparent url(<?php echo($iconurl); ?>) no-repeat">
-			<br />
-		</div>
-		<h2><?php _e('WP Photo Album Plus Settings', 'wp-photo-album-plus'); ?> <span style="color:blue;"><?php _e('Auto Save', 'wp-photo-album-plus') ?></span></h2>
+		<img id="icon-album" src="<?php echo $iconurl ?>" />
+		<h1 style="display:inline" ><?php _e('WP Photo Album Plus Settings', 'wp-photo-album-plus'); ?> <span style="color:blue;"><?php _e('Auto Save', 'wp-photo-album-plus') ?></span></h1>
 		<?php _e('Database revision:', 'wp-photo-album-plus'); ?> <?php echo(get_option('wppa_revision', '100')) ?>. <?php _e('WP Charset:', 'wp-photo-album-plus'); ?> <?php echo(get_bloginfo('charset')); ?>. <?php echo 'Current PHP version: ' . phpversion() ?>. <?php echo 'WPPA+ API Version: '.$wppa_api_version ?>.
 		<br /><?php if ( is_multisite() ) {
 			if ( WPPA_MULTISITE_GLOBAL ) {
@@ -5010,8 +5008,8 @@ global $wp_version;
 							$desc = __('Photo Of The Day widget link.', 'wp-photo-album-plus');
 							$help = esc_js(__('Select the type of link the photo of the day points to.', 'wp-photo-album-plus'));
 							$help .= '\n\n'.esc_js(__('If you select \'defined on widget admin page\' you can manually enter a link and title on the Photo of the day Widget Admin page.', 'wp-photo-album-plus'));
-							$slug1 = 'wppa_widget_linktype';
-							$slug2 = 'wppa_widget_linkpage';
+							$slug1 = 'wppa_potd_linktype';
+							$slug2 = 'wppa_potd_linkpage';
 							wppa_verify_page($slug2);
 							$slug3 = 'wppa_potd_blank';
 							$slug4 = 'wppa_potdwidget_overrule';

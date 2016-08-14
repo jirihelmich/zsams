@@ -1,7 +1,7 @@
 /* admin-scripts.js */
 /* Package: wp-photo-album-plus
 /*
-/* Version 6.4.19
+/* Version 6.5.04
 /* Various js routines used in admin pages
 */
 
@@ -147,7 +147,7 @@ function wppaInitSettings() {
 	wppaCheckLinkPageErr('mphoto');
 	wppaCheckLinkPageErr('topten_widget');
 	wppaCheckLinkPageErr('slideonly_widget');
-	wppaCheckLinkPageErr('widget');
+	wppaCheckLinkPageErr('potd');
 	wppaCheckLinkPageErr('comment_widget');
 	wppaCheckLinkPageErr('thumbnail_widget');
 	wppaCheckLinkPageErr('lasten_widget');
@@ -792,7 +792,7 @@ function wppaCheckCoverImg() {
 }
 
 function wppaCheckPotdLink() {
-	var lvalue = document.getElementById('widget_linktype').value;
+	var lvalue = document.getElementById('potd_linktype').value;
 	if (lvalue == 'none' || lvalue == 'lightbox' || lvalue == 'file' || lvalue == 'custom') {
 		jQuery('.wppa_potdlp').css('visibility', 'hidden');
 	}
@@ -1791,7 +1791,10 @@ function wppaAjaxUpdateOptionValue(slug, elem, multisel) {
 	data += '&wppa-nonce='+document.getElementById('wppa-nonce').value;
 
 	if ( elem != 0 ) {
-		if ( multisel ) {
+		if ( typeof( elem ) == 'number' ) {
+			data += '&value='+elem;
+		}
+		else if ( multisel ) {
 			data += '&value='+wppaGetSelectionEnumByClass('.'+slug, ',');
 		}
 		else {
@@ -1900,6 +1903,7 @@ function wppaPhotoStatusChange(id) {
 }
 
 function wppaCheckLinkPageErr(slug) {
+
 	var type = 'nil';
 		if ( document.getElementById(slug+'_linktype') ) type = document.getElementById(slug+'_linktype').value;
 	var page = document.getElementById(slug+'_linkpage').value;
@@ -2125,5 +2129,5 @@ function wppaDismissAdminNotice(notice, elm) {
 
 	wppaAjaxUpdateOptionCheckBox(notice, elm);
 	jQuery('#wppa-wr-').css('display','none');
-	
+
 }

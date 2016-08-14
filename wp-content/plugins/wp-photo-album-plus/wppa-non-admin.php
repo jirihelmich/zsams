@@ -71,6 +71,9 @@ global $wpdb;
 
 	// Share info for sm that uses og
 	$id = wppa_get_get( 'photo' );
+	if ( ! wppa_photo_exists( $id ) ) {
+		$id = false;
+	}
 	if ( $id ) {
 
 		// SM may not accept images from the cloud.
@@ -150,7 +153,7 @@ global $wpdb;
 		}
 	}
 
-	// To make sure we are on a page that contains at least %%wppa%% we check for Get var 'wppa-album'.
+	// To make sure we are on a page that contains at least [wppa] we check for Get var 'wppa-album'.
 	// This also narrows the selection of featured photos to those that exist in the current album.
 	$done = array();
 	$album = '';

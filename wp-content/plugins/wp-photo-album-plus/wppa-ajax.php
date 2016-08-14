@@ -2,7 +2,7 @@
 /* wppa-ajax.php
 *
 * Functions used in ajax requests
-* Version 6.5.00
+* Version 6.5.04
 *
 */
 
@@ -1671,6 +1671,7 @@ global $wppa_log_file;
 
 		// The wppa-settings page calls ajax with $wppa_action == 'update-option';
 		case 'update-option':
+
 			// Verify that we are legally here
 			$nonce  = $_REQUEST['wppa-nonce'];
 			if ( ! wp_verify_nonce( $nonce, 'wppa-nonce' ) ) {
@@ -1687,6 +1688,39 @@ global $wppa_log_file;
 			$alert  = '';			// Init the return string data
 			wppa( 'error', '0' );	//
 			$title  = '';			//
+
+			// Check for potd settings
+			$potdarr = array( 	'wppa_potd_title',
+								'wppa_potd_widget_width',
+								'wppa_potd_align',
+								'wppa_potd_linkurl',
+								'wppa_potd_linktitle',
+								'wppa_potd_subtitle',
+								'wppa_potd_counter',
+								'wppa_potd_counter_link',
+								'wppa_potd_album_type',
+								'wppa_potd_album',
+								'wppa_potd_include_subs',
+								'wppa_potd_status_filter',
+								'wppa_potd_inverse',
+								'wppa_potd_method',
+								'wppa_potd_period',
+								'wppa_potd_offset',
+								'wppa_potd_photo',
+							);
+
+			if ( in_array( $option, $potdarr ) ) {
+				if ( ! current_user_can( 'wppa_potd' ) ) {
+					echo '||1||'.__( 'You do not have the rights to update photo of the day settings' , 'wp-photo-album-plus');
+					wppa_exit();
+				}
+			}
+			else {
+				if ( ! current_user_can( 'wppa_settings' ) ) {
+					echo '||1||'.__( 'You do not have the rights to update settings' , 'wp-photo-album-plus');
+					wppa_exit();
+				}
+			}
 
 			// If it is a font family, change all double quotes into single quotes as this destroys much more than you would like
 			if ( strpos( $option, 'wppa_fontfamily_' ) !== false ) $value = str_replace( '"', "'", $value );
@@ -1770,6 +1804,26 @@ global $wppa_log_file;
 			}
 			else switch ( $option ) {
 //wppa_log('obs', 'option '.$option.' attempt to set to '.$value);
+
+				// Changing potd_album_type ( physical / virtual ) also clears potd_album
+				case 'wppa_potd_album_type':
+					if ( ! in_array( $value, array( 'physical', 'virtual' ) ) ) {
+						echo '||1||Invalid value: '.$value.'||';
+						wppa_exit();
+					}
+					if ( $value == 'physical' ) {
+						wppa_update_option( 'wppa_potd_album', '' );
+					}
+					else {
+						wppa_update_option( 'wppa_potd_album', 'all' );
+					}
+					break;
+				case 'wppa_potd_album':
+					if ( wppa_opt( 'potd_album_type' ) == 'physical' ) {
+						$value = str_replace( '.', ',', ( wppa_expand_enum( str_replace( ',', '.', $value ) ) ) );
+					}
+					break;
+
 				case 'wppa_colwidth': //	 ??	  fixed   low	high	title
 					wppa_ajax_check_range( $value, 'auto', '100', false, __( 'Column width.' , 'wp-photo-album-plus') );
 					break;

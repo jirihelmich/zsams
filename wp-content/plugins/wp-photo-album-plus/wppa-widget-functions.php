@@ -2,19 +2,39 @@
 /* wppa-widget-functions.php
 /* Package: wp-photo-album-plus
 /*
-/* Version 6.4.16
+/* Version 6.5.04
 /*
+*/
+
+/*
+
+This file contans functions to get the photo of the day selection pool and to get THE photo of the day.
+
+Related settings are:
+
+			'wppa_potd_album_type',
+			'wppa_potd_album',
+			'wppa_potd_include_subs',
+			'wppa_potd_status_filter',
+			'wppa_potd_inverse',
+			'wppa_potd_method',
+			'wppa_potd_period',
+			'wppa_potd_offset',
+			'wppa_potd_photo',
+
 */
 
 // This function returns an array of photos that meet the current photo of the day selection criteria
 function wppa_get_widgetphotos( $alb, $option = '' ) {
 global $wpdb;
 
+	if ( ! $alb ) return false;
+
 	$photos = false;
 	$query = '';
 
 	// Compile status clause
-	switch( wppa_opt( 'widget_status_filter' ) ) {
+	switch( wppa_opt( 'potd_status_filter' ) ) {
 		case 'publish':
 			$statusclause = " `status` = 'publish' ";
 			break;
@@ -40,27 +60,49 @@ global $wpdb;
 			}
 	}
 
+	// If physical album(s) and include subalbums is active, make it an enumeration(with ',' as seperator)
+	if ( wppa_opt( 'potd_album_type' ) == 'physical' && wppa_switch( 'potd_include_subs' ) ) {
+		$alb = str_replace( ',', '.', $alb );
+		$alb = wppa_expand_enum( wppa_alb_to_enum_children( $alb ) );
+		$alb = str_replace( '.', ',', $alb );
+	}
+
+	// If physical albums and inverse selection is active, invert selection
+	if ( wppa_opt( 'potd_album_type' ) == 'physical' && wppa_switch( 'potd_inverse' ) ) {
+		$albs = explode( ',', $alb );
+		$all  = $wpdb->get_col( "SELECT `id` FROM `" . WPPA_ALBUMS . "` " );
+		$alb  = implode( ',', array_diff( $all, $albs ) );
+	}
+
+	/* Now find out the final query */
+
+	/* Physical albums */
+
 	// Is it a single album?
 	if ( wppa_is_int( $alb ) ) {
-		$query = $wpdb->prepare( "SELECT `id`, `p_order` FROM `" . WPPA_PHOTOS . "` WHERE `album` = %s " . " AND " . $statusclause . $option, $alb );
+		$query = $wpdb->prepare(	"SELECT `id`, `p_order` " .
+									"FROM `" . WPPA_PHOTOS . "` " .
+									"WHERE `album` = %s " .
+									"AND " . $statusclause . $option,
+									$alb );
 	}
 
 	// Is it an enumeration of album ids?
 	elseif ( strchr( $alb, ',' ) ) {
 		$alb = trim( $alb, ',' );
 
-		// Test for numeric only ( security test )
-		$t = str_replace( ',', '', $alb);
-		if ( is_numeric( $t ) ) {
-			$query = 	"SELECT `id`, `p_order` FROM `" . WPPA_PHOTOS . "` " .
-							"WHERE `album` IN ( " . $alb . " ) " .
-							"AND " . $statusclause . $option;
-		}
+		$query = 	"SELECT `id`, `p_order` " .
+					"FROM `" . WPPA_PHOTOS . "` " .
+					"WHERE `album` IN ( " . $alb . " ) " .
+					"AND " . $statusclause . $option;
 	}
 
+	/* Virtual albums */
 	// Is it ALL?
 	elseif ( $alb == 'all' ) {
-		$query = "SELECT `id`, `p_order` FROM `" . WPPA_PHOTOS . "` " . " WHERE " . $statusclause . $option;
+		$query = 	"SELECT `id`, `p_order` " .
+					"FROM `" . WPPA_PHOTOS . "` " .
+					"WHERE " . $statusclause . $option;
 	}
 
 	// Is it SEP?
@@ -126,133 +168,43 @@ global $wpdb;
 	return $photos;
 }
 
-// get select form element listing albums
-// Special version for widget
-function wppa_walbum_select( $sel = '' ) {
-global $wpdb;
-
-	$albums = $wpdb->get_results( "SELECT * FROM `" . WPPA_ALBUMS . "` ORDER BY `name`", ARRAY_A );
-	wppa_cache_album( 'add', $albums );
-
-	if ( is_numeric( $sel ) ) $type = 1;		// Single number
-	elseif ( strchr( $sel, ',' ) ) {
-		$type = 2;							// Array
-		$albs =  explode( ',', $sel );
-	}
-	elseif ( $sel == 'all' ) $type = 3;		// All
-	elseif ( $sel == 'sep' ) $type = 4;		// Separate only
-	elseif ( $sel == 'all-sep' ) $type = 5;	// All minus separate
-	elseif ( $sel == 'topten' ) $type = 6;	// Topten
-
-	else $type = 0;							// Nothing yet
-
-    $result = '<option value="" >' . __( '- select (another) album or a set -' , 'wp-photo-album-plus' ) . '</option>';
-
-	foreach ( $albums as $album ) {
-		switch ( $type ) {
-			case 1:
-				$dis = ( $album['id'] == $sel );
-				break;
-			case 2:
-				$dis = in_array( $album['id'], $albs );
-				break;
-			case 3:
-				$dis = true;
-				break;
-			case 4:
-				$dis = ( $album['a_parent'] == '-1' );
-				break;
-			case 5:
-				$dis = ( $album['a_parent'] != '-1' );
-				break;
-			case 6:
-				$dis = false;
-				break;
-
-			default:
-				$dis = false;
-		}
-		if ( $dis ) $dis = 'disabled="disabled"';
-		else $dis = '';
-		$result .= '<option ' . $dis . ' value="' . $album['id'] . '">( ' . $album['id'] . ' )';
-			if ( $album['id'] < '1000' ) $result .= '&nbsp;';
-			if ( $album['id'] < '100' ) $result .= '&nbsp;';
-			if ( $album['id'] < '10' ) $result .= '&nbsp;';
-			$result .= __( stripslashes( $album['name'] ) ) . '</option>';
-	}
-	$sel = $type == 3 ? 'selected="selected"' : '';
-	$result .= '<option value="all" ' . $sel . ' >' . __( '- all albums -' , 'wp-photo-album-plus' ) . '</option>';
-	$sel = $type == 4 ? 'selected="selected"' : '';
-	$result .= '<option value="sep" ' . $sel . ' >' . __( '- all -separate- albums -' , 'wp-photo-album-plus' ) . '</option>';
-	$sel = $type == 5 ? 'selected="selected"' : '';
-	$result .= '<option value="all-sep" ' . $sel . ' >' . __( '- all albums except -separate-' , 'wp-photo-album-plus' ) . '</option>';
-	$sel = $type == 6 ? 'selected="selected"' : '';
-	$result .= '<option value="topten" ' . $sel . ' >' . __( '- top rated photos -' , 'wp-photo-album-plus' ) . '</option>';
-	$result .= '<option value="clr" >' . __( '- start over -' , 'wp-photo-album-plus' ) . '</option>';
-	return $result;
-}
-
-function wppa_walbum_sanitize( $walbum ) {
-
-	$result = strtolower( $walbum );
-	$result = strip_tags( $result );
-
-	if ( strstr( $result, 'all-sep' ) ) $result = 'all-sep';
-	elseif ( strstr( $result, 'all' ) ) $result = 'all';
-	elseif ( strstr( $result, 'sep' ) ) $result = 'sep';
-	elseif ( strstr( $result, 'topten' ) ) $result = 'topten';
-	elseif ( strstr( $result, 'clr' ) ) $result = '';
-	else {
-
-		// Change multiple commas to one
-		while ( substr_count( $result, ',,' ) ) $result = str_replace( ',,', ',', $result );
-
-		// remove leading and trailing commas
-		$result = trim( $result, ',' );
-
-		// Check for illegal chars
-		$temp = str_replace( ',', '', $result );
-		if ( $temp && ! wppa_is_int( $temp ) ) {
-			// $result contains other chars than numbers and comma's
-			$result = 'clr';
-		}
-	}
-	return $result;
-}
 
 // get the photo of the day
 function wppa_get_potd() {
 global $wpdb;
 
-	$image = '';
-	switch ( wppa_opt( 'widget_method' ) ) {
-		case '1':	// Fixed photo
-			$id = wppa_opt( 'widget_photo' );
-			if ( $id != '' ) {
-				$image = $wpdb->get_row( $wpdb->prepare( "SELECT * FROM `" . WPPA_PHOTOS . "` WHERE `id` = %s LIMIT 0,1", $id ), ARRAY_A );
-				wppa_cache_photo( 'add', $image );
-			}
+	$id = 0;
+	switch ( wppa_opt( 'potd_method' ) ) {
+
+		// Fixed photo
+		case '1':
+			$id = wppa_opt( 'potd_photo' );
 			break;
-		case '2':	// Random
-			$album = wppa_opt( 'widget_album' );
+
+		// Random
+		case '2':
+			$album = wppa_opt( 'potd_album' );
 			if ( $album == 'topten' ) {
 				$images = wppa_get_widgetphotos( $album );
 				if ( count( $images ) > 1 ) {	// Select a random first from the current selection
 					$idx = rand( 0, count( $images ) - 1 );
-					$image = $images[$idx];
+					$id = $images[$idx]['id'];
 				}
 			}
 			elseif ( $album != '' ) {
 				$images = wppa_get_widgetphotos( $album, "ORDER BY RAND() LIMIT 0,1" );
-				$image = $images[0];
+				$id = $images[0]['id'];
 			}
 			break;
-		case '3':	// Last upload
-			$album = wppa_opt( 'widget_album' );
+
+		// Last upload
+		case '3':
+			$album = wppa_opt( 'potd_album' );
 			if ( $album == 'topten' ) {
 				$images = wppa_get_widgetphotos( $album );
 				if ( $images ) {
-					// fid last uploaded image in the $images pool
+
+					// find last uploaded image in the $images pool
 					$temp = 0;
 					foreach( $images as $img ) {
 						if ( $img['timestamp'] > $temp ) {
@@ -260,54 +212,53 @@ global $wpdb;
 							$image = $img;
 						}
 					}
+					$id = $image['id'];
 				}
 			}
 			elseif ( $album != '' ) {
 				$images = wppa_get_widgetphotos( $album, "ORDER BY timestamp DESC LIMIT 0,1" );
-				$image = $images[0];
+				$id = $images[0]['id'];
 			}
 			break;
-		case '4':	// Change every
-			$album = wppa_opt( 'widget_album' );
+
+		// Change every
+		case '4':
+			$album = wppa_opt( 'potd_album' );
 			if ( $album != '' ) {
-				$per = wppa_opt( 'widget_period' );
+				$per = wppa_opt( 'potd_period' );
 				$photos = wppa_get_widgetphotos( $album );
 				if ( $per == '0' ) {
 					if ( $photos ) {
-						$image = $photos[rand( 0, count( $photos )-1 )];
+						$id = $photos[rand( 0, count( $photos )-1 )]['id'];
 					}
-					else $image = '';
 				}
 				elseif ( $per == 'day-of-week' ) {
-					$image = '';
 					if ( $photos ) {
 						$d = date_i18n( "w" );
 						$d -= get_option( 'wppa_potd_offset', '0' );
 						while ( $d < '1' ) $d += '7';
 						foreach ( $photos as $img ) {
-							if ( $img['p_order'] == $d ) $image = $img;
+							if ( $img['p_order'] == $d ) $id = $img['id'];
 						}
 					}
 				}
 				elseif ( $per == 'day-of-month' ) {
-					$image = '';
 					if ( $photos ) {
 						$d = strval(intval(date_i18n( "d" )));
 						$d -= get_option( 'wppa_potd_offset', '0' );
 						while ( $d < '1' ) $d += '31';
 						foreach ( $photos as $img ) {
-							if ( $img['p_order'] == $d ) $image = $img;
+							if ( $img['p_order'] == $d ) $id = $img['id'];
 						}
 					}
 				}
 				elseif ( $per == 'day-of-year' ) {
-					$image = '';
 					if ( $photos ) {
 						$d = strval(intval(date_i18n( "z" )));
 						$d -= get_option( 'wppa_potd_offset', '0' );
 						while ( $d < '0' ) $d += '366';
 						foreach ( $photos as $img ) {
-							if ( $img['p_order'] == $d ) $image = $img;
+							if ( $img['p_order'] == $d ) $id = $img['id'];
 						}
 					}
 				}
@@ -348,24 +299,19 @@ global $wpdb;
 						}
 
 						// Image found
-						$image = $photos[$idn];
-					}
-					else {
-						$image = '';
+						$id = $photos[$idn]['id'];
 					}
 				}
-			} else {
-				$image = '';
 			}
 			break;
 
-		default:
-			$image = '';
 	}
 
-	if ( $image ) {
-		$image = wppa_cache_photo( $image['id'] );
+	if ( $id ) {
+		$result = wppa_cache_photo( $id );
 	}
-	return $image;
+	else {
+		$result = false;
+	}
+	return $result;
 }
-

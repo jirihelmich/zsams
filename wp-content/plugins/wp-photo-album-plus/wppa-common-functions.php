@@ -2,7 +2,7 @@
 /* wppa-common-functions.php
 *
 * Functions used in admin and in themes
-* Version 6.5.03
+* Version 6.5.04
 *
 */
 
@@ -1584,6 +1584,7 @@ global $wpdb;
 											'sort'				=> true,
 											'checkarray' 		=> false,
 											'array' 			=> array(),
+											'optionclass' 		=> '',
 											 ) );
 
 	// Provide default selection if no selected given
@@ -1698,13 +1699,21 @@ global $wpdb;
 			__( '--- a selection box ---' , 'wp-photo-album-plus' ) .
 		'</option>';
 
+	// In case multiple
+	if ( strpos( $args['selected'], ',' ) !== false ) {
+		$selarr = explode( ',', $args['selected'] );
+	}
+	else {
+		$selarr = array( $args['selected'] );
+	}
+
 	if ( $albums ) foreach ( $albums as $album ) {
 		if ( ( $args['disabled'] == $album['id'] ) ||
 			 ( $args['exclude'] == $album['id'] ) ||
 			 ( $args['checkupload'] && ! wppa_allow_uploads( $album['id'] ) ) ||
 			 ( $args['disableancestors'] && wppa_is_ancestor( $args['exclude'], $album['id'] ) )
 			 ) $disabled = ' disabled="disabled"'; else $disabled = '';
-		if ( $args['selected'] == $album['id'] && ! $disabled ) $selected = ' selected="selected"'; else $selected = '';
+		if ( in_array( $album['id'], $selarr, true ) && ! $disabled ) $selected = ' selected="selected"'; else $selected = '';
 
 		$ok = true; // Assume this will be in the list
 		if ( $args['checkaccess'] && ! wppa_have_access( $album['id'] ) ) {
@@ -1727,7 +1736,7 @@ global $wpdb;
 		}
 		if ( $ok ) {
 			if ( $args['addnumbers'] ) $number = ' ( '.$album['id'].' )'; else $number = '';
-			$result .= '<option value="' . $album['id'] . '" ' . $selected . $disabled . '>' . $album['name'] . $number . '</option>';
+			$result .= '<option class="' . $args['optionclass']. '" value="' . $album['id'] . '" ' . $selected . $disabled . '>' . $album['name'] . $number . '</option>';
 		}
 	}
 

@@ -3,7 +3,7 @@
 * Package: wp-photo-album-plus
 *
 * Contains all the setup stuff
-* Version 6.5.03
+* Version 6.5.04
 *
 */
 
@@ -443,6 +443,18 @@ global $silent;
 				unlink( $logfile );
 			}
 			update_option( 'wppa_album_crypt_9', wppa_get_unique_album_crypt() );
+		}
+
+		if ( $old_rev <= '6504' ) {
+			wppa_rename_setting( 'wppa_widgettitle', 			'wppa_potd_title' );
+			wppa_rename_setting( 'wppa_widget_linkurl', 		'wppa_potd_linkurl' );
+			wppa_rename_setting( 'wppa_widget_linktitle', 		'wppa_potd_linktitle' );
+			wppa_rename_setting( 'wppa_widget_subtitle', 		'wppa_potd_subtitle' );
+			wppa_rename_setting( 'wppa_widget_counter', 		'wppa_potd_counter' );
+			wppa_rename_setting( 'wppa_widget_album', 			'wppa_potd_album' );
+			wppa_rename_setting( 'wppa_widget_status_filter', 	'wppa_potd_status_filter' );
+			wppa_rename_setting( 'wppa_widget_method', 			'wppa_potd_method' );
+			wppa_rename_setting( 'wppa_widget_period', 			'wppa_potd_period' );
 		}
 	}
 
@@ -1204,8 +1216,8 @@ Hide Camera info
 						'wppa_sswidget_blank'				=> 'no',
 						'wppa_sswidget_overrule'			=> 'no',
 
-						'wppa_widget_linktype' 				=> 'single',
-						'wppa_widget_linkpage' 				=> '0',
+						'wppa_potd_linktype' 				=> 'single',
+						'wppa_potd_linkpage' 				=> '0',
 						'wppa_potd_blank'					=> 'no',
 						'wppa_potdwidget_overrule'			=> 'no',
 
@@ -1566,20 +1578,27 @@ Hide Camera info
 						'wppa_fotomoto_min_width' 				=> '400',
 
 						// Photo of the day widget
-						'wppa_widgettitle'			=> __('Photo of the day', 'wp-photo-album-plus'),
-						'wppa_widget_linkurl'		=> __('Type your custom url here', 'wp-photo-album-plus'),
-						'wppa_widget_linktitle' 	=> __('Type the title here', 'wp-photo-album-plus'),
-						'wppa_widget_subtitle'		=> 'none',
-						'wppa_widget_album'			=> 'all',	// All albums
-						'wppa_widget_photo'			=> '',
-						'wppa_potd_align' 			=> 'center',
-						'wppa_widget_method'		=> '4', 	// Change every
-						'wppa_widget_period'		=> '24',	// Day
-						'wppa_widget_width'			=> '200',
+						'wppa_potd_title'			=> __('Photo of the day', 'wp-photo-album-plus'),
 						'wppa_potd_widget_width' 	=> '200',
-						'wppa_widget_status_filter'	=> 'none',
-						'wppa_widget_counter' 		=> 'no',
+						'wppa_potd_align' 			=> 'center',
+						'wppa_potd_linkurl'		=> __('Type your custom url here', 'wp-photo-album-plus'),
+						'wppa_potd_linktitle' 	=> __('Type the title here', 'wp-photo-album-plus'),
+						'wppa_potd_subtitle'		=> 'none',
+						'wppa_potd_counter' 		=> 'no',
 						'wppa_potd_counter_link' 	=> 'thumbs',
+						'wppa_potd_album_type' 		=> 'physical',
+						'wppa_potd_album'			=> 'all',	// All albums
+						'wppa_potd_include_subs' 	=> 'no',
+						'wppa_potd_status_filter'	=> 'none',
+						'wppa_potd_inverse' 		=> 'no',
+						'wppa_potd_method'		=> '4', 	// Change every
+						'wppa_potd_period'		=> '24',	// Day
+						'wppa_potd_offset' 			=> '0',
+						'wppa_potd_photo'			=> '',
+						'wppa_potd_preview' 		=> 'no',
+
+
+						'wppa_widget_width'			=> '200',	// Do we use this somewhere still?
 
 						// Topten widget
 						'wppa_toptenwidgettitle'	=> __('Top Ten Photos', 'wp-photo-album-plus'),
@@ -1777,7 +1796,7 @@ global $wpdb;
 					$desc = __( 'Default photo album for' , 'wp-photo-album-plus').' '.$user;
 					$id = wppa_create_album_entry( array ( 'name' => $name, 'description' => $desc, 'a_parent' => $parent ) );
 					if ( $id ) {
-						wppa_log( 'Obs', 'Album ' . $id . ' for ' . $user . 'created.' );
+						wppa_log( 'Obs', 'Album ' . wppa_get_album_name( $parent ) . ' -> ' . $id . ' for ' . $user . ' created.' );
 					}
 					else {
 						wppa_log( 'Err', 'Could not create subalbum of ' . $parent . ' for ' . $user );

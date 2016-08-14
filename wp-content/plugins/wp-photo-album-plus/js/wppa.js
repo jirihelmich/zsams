@@ -2,7 +2,7 @@
 //
 // conatins common vars and functions
 //
-var wppaJsVersion = '6.5.03';
+var wppaJsVersion = '6.5.04';
 
 // Important notice:
 // All external vars that may be given a value in wppa-non-admin.php must be declared here and not in other front-end js files!!
@@ -190,11 +190,13 @@ var _wppaAudioHtml = [];
 var _wppaVideoNatWidth = [];
 var	_wppaVideoNatHeight = [];
 var _wppaWaitTexts = [];
+var _wppaImageAlt = [];
 
 var __wppaOverruleRun = false;
 
 var wppaOvlUrls;
 var wppaOvlTitles;
+var wppaOvlAlts;
 var wppaOvlIdx = 0;
 var wppaOvlFirst = true;
 var wppaOvlKbHandler = '';
@@ -248,7 +250,7 @@ var wppaIsMobile = false;
 // Init at dom ready
 jQuery( document ).ready(function() {
 	wppaDoInit( false );
-	
+
 	// For browsers that signal domready too early for autocol, redo autocol
 	setTimeout( function() { wppaDoInit( true ); }, 1000 );
 });

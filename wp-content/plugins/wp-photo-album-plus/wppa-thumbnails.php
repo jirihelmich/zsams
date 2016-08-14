@@ -5,7 +5,7 @@
 * Various funcions to display a thumbnail image
 * Contains all possible frontend thumbnail types
 *
-* Version 6.5.00
+* Version 6.5.04
 *
 */
 
@@ -308,7 +308,9 @@ global $wpdb;
 						( $has_audio ? ' data-audiohtml="' . esc_attr( wppa_get_audio_body( $id ) ) . '"' : '' ) .
 						' ' . wppa( 'rel' ) . '="'.wppa_opt( 'lightbox_name' ).'[occ'.wppa( 'mocc' ).']"' .
 						' ' . wppa( 'lbtitle' ) . '="'.$title.'" ' .
-						' class="thumb-img" id="x-'.$xid.'-'.wppa( 'mocc' ).'">';
+						' class="thumb-img" id="x-'.$xid.'-'.wppa( 'mocc' ).'"' .
+						' data-alt="' . esc_attr( wppa_get_imgalt( $id, true ) ) . '"' .
+						' >';
 			if ( $is_video ) {
 				$result .= wppa_get_video_html( array(
 						'id'			=> $id,
@@ -862,6 +864,7 @@ function wppa_the_thumbascoverphoto( $id, $src, $photo_left, $link, $imgattr_a, 
 						' href="' . $href . '"' .
 						' ' . wppa( 'rel' ) . '="' . wppa_opt( 'lightbox_name' ). '[occ' . wppa( 'mocc' ) . ']"' .
 						( $title ? ' ' . wppa( 'lbtitle' ) . '="' . $title . '"' : '' ) .
+						' data-alt="' . esc_attr( wppa_get_imgalt( $id, true ) ) . '"' .
 						' >';
 
 			if ( wppa_is_video( $id ) ) {
@@ -1254,7 +1257,9 @@ global $wpdb;
 						' ' . wppa( 'rel' ) . '="' . wppa_opt( 'lightbox_name' ) . '[occ'.wppa( 'mocc' ) . ']"' .
 						( $title ? ' ' . wppa( 'lbtitle' ) . '="' . $title . '"' : '' ) .
 						' class="thumb-img"' .
-						' id="x-' . $xid . '-' . wppa( 'mocc' ) . '">';
+						' id="x-' . $xid . '-' . wppa( 'mocc' ) . '"' .
+						' data-alt="' . esc_attr( wppa_get_imgalt( $id, true ) ) . '"' .
+						' >';
 
 			// The image
 			$title = wppa_zoom_in( $id );
@@ -1573,7 +1578,9 @@ function wppa_get_the_widget_thumb( $type, $image, $album, $display, $link, $tit
 						( $audiohtml ? ' data-audiohtml="' . $audiohtml . '"' : '' ) .
 						' ' . wppa( 'rel' ) . '="' . wppa_opt( 'lightbox_name' ) . '[' . $type . '-' . $album . '-' . wppa( 'mocc' ) . ']"' .
 						( $title ? ' ' . wppa( 'lbtitle' ) . '="' . $title . '"' : '' ) .
-						' target="' . $link['target'] . '" >';
+						' target="' . $link['target'] . '"' .
+						' data-alt="' . esc_attr( wppa_get_imgalt( $id, true ) ) . '"' .
+						' >';
 				$result .= "\n\t\t";
 				if ( $display == 'thumbs' ) {
 					$title = wppa_zoom_in( $id );

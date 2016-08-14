@@ -3,7 +3,7 @@
 * Package: wp-photo-album-plus
 *
 * Functions for album covers
-* Version 6.5.02
+* Version 6.5.04
 *
 */
 
@@ -896,6 +896,7 @@ global $wpdb;
 					( $has_audio ? ' data-audiohtml="' . esc_attr( wppa_get_audio_body( $id ) ) . '"' : '' ) .
 					' ' . wppa( 'rel' ) . '="' . wppa_opt( 'lightbox_name' ) . '[alw-' . wppa( 'mocc' ) . '-' . $albumid . ']"' .
 					' ' . wppa( 'lbtitle' ) . '="' . $title . '"' .
+					' data-alt="' . esc_attr( wppa_get_imgalt( $id, true ) ) . '"' .
 					' >' );
 
 				// the cover image
@@ -1051,6 +1052,7 @@ global $wpdb;
 						( $has_audio ? ' data-audiohtml="' . esc_attr( wppa_get_audio_body( $thumb['id'] ) ) . '"' : '' ) .
 						' ' . wppa( 'rel' ) . '="' . wppa_opt( 'lightbox_name' ) . '[alw-' . wppa( 'mocc' ) . '-' . $albumid . ']"' .
 						( $title ? ' ' . wppa( 'lbtitle' ) . '="' . $title . '"' : '' ) .
+						' data-alt="' . esc_attr( wppa_get_imgalt( $thumb['id'], true ) ) . '"' .
 						' >'
 					);
 

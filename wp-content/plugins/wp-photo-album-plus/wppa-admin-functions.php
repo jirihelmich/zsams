@@ -3,7 +3,7 @@
 * Package: wp-photo-album-plus
 *
 * gp admin functions
-* Version 6.4.20
+* Version 6.5.04
 *
 */
 
@@ -53,7 +53,7 @@ function wppa_restore_settings( $fname, $type = '' ) {
 							'wppa_allow_debug',
 							'wppa_thumb_linkpage',
 							'wppa_mphoto_linkpage',
-							'wppa_widget_linkpage',
+							'wppa_potd_linkpage',
 							'wppa_slideonly_widget_linkpage',
 							'wppa_topten_widget_linkpage',
 							'wppa_coverimg_linkpage',
@@ -462,11 +462,11 @@ global $wppa_supported_audio_extensions;
 				wppa_error_message( sprintf( __( 'File %s is of an unsupported filetype and has been removed.' , 'wp-photo-album-plus'), basename( wppa_sanitize_file_name( $file ) ) ) );
 				$count++;
 			}
-			
+
 			// Sanitize filename
 			$dirname = dirname( $file );
 			$filename = basename( $file );
-			
+
 			// Can not use sanitize_file_name() because it removes spaces that are not illegal in most servers.
 			$filename = strip_tags( stripslashes( $filename ) ); //sanitize_text_field( $filename );
 			if ( ! seems_utf8( $filename ) ) {
