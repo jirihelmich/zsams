@@ -1,66 +1,64 @@
 <?php get_header(); ?>
 
-	<main role="main">
-	<!-- section -->
-	<section>
+<main role="main">
+    <!-- section -->
+    <section id="content" class="container-fluid">
+        <div class="row others">
 
-	<?php if (have_posts()): while (have_posts()) : the_post(); ?>
+            <div class="col-sm-8">
+                <div class="card">
+                    <div class="card-header">
+                        <a href="<?php the_permalink(); ?>" title="<?php the_title(); ?>"><?php the_title(); ?></a>
+                    </div>
+                    <div class="card-block">
 
-		<!-- article -->
-		<article id="post-<?php the_ID(); ?>" <?php post_class(); ?>>
+                        <?php if (have_posts()): while (have_posts()) : the_post(); ?>
 
-			<!-- post thumbnail -->
-			<?php if ( has_post_thumbnail()) : // Check if Thumbnail exists ?>
-				<a href="<?php the_permalink(); ?>" title="<?php the_title(); ?>">
-					<?php the_post_thumbnail(); // Fullsize image for the single post ?>
-				</a>
-			<?php endif; ?>
-			<!-- /post thumbnail -->
+                            <!-- article -->
+                            <article id="post-<?php the_ID(); ?>" <?php post_class(); ?>>
 
-			<!-- post title -->
-			<h1>
-				<a href="<?php the_permalink(); ?>" title="<?php the_title(); ?>"><?php the_title(); ?></a>
-			</h1>
-			<!-- /post title -->
+                                <!-- post thumbnail -->
+                                <?php if (has_post_thumbnail()) : // Check if Thumbnail exists ?>
+                                    <a href="<?php the_permalink(); ?>" title="<?php the_title(); ?>">
+                                        <?php the_post_thumbnail(); // Fullsize image for the single post ?>
+                                    </a>
+                                <?php endif; ?>
+                                <!-- /post thumbnail -->
 
-			<!-- post details -->
-			<span class="date"><?php the_time('F j, Y'); ?> <?php the_time('g:i a'); ?></span>
-			<span class="author"><?php _e( 'Published by', 'zsms' ); ?> <?php the_author_posts_link(); ?></span>
-			<span class="comments"><?php if (comments_open( get_the_ID() ) ) comments_popup_link( __( 'Leave your thoughts', 'zsms' ), __( '1 Comment', 'zsms' ), __( '% Comments', 'zsms' )); ?></span>
-			<!-- /post details -->
+                                <?php the_content(); // Dynamic Content ?>
 
-			<?php the_content(); // Dynamic Content ?>
+                                <?php the_tags(__('Tags: ', 'zsms'), ', ', '<br>'); // Separated by commas with a line break at the end ?>
 
-			<?php the_tags( __( 'Tags: ', 'zsms' ), ', ', '<br>'); // Separated by commas with a line break at the end ?>
+                                <p class="text-xs-right">
+                                    Zařazeno v kategorii: <?php the_category(', '); ?>, <span class="date"><?php the_time('j. n. Y'); ?> <?php the_time('H:i'); ?></span>
+                                </p>
 
-			<p><?php _e( 'Categorised in: ', 'zsms' ); the_category(', '); // Separated by commas ?></p>
+                                <?php edit_post_link(); // Always handy to have Edit Post Links available ?>
 
-			<p><?php _e( 'This post was written by ', 'zsms' ); the_author(); ?></p>
+                            </article>
+                            <!-- /article -->
 
-			<?php edit_post_link(); // Always handy to have Edit Post Links available ?>
+                        <?php endwhile; ?>
 
-			<?php comments_template(); ?>
+                        <?php else: ?>
 
-		</article>
-		<!-- /article -->
+                            <!-- article -->
+                            <article>
 
-	<?php endwhile; ?>
+                                <h1><?php _e('Sorry, nothing to display.', 'zsms'); ?></h1>
 
-	<?php else: ?>
+                            </article>
+                            <!-- /article -->
 
-		<!-- article -->
-		<article>
+                        <?php endif; ?>
 
-			<h1><?php _e( 'Sorry, nothing to display.', 'zsms' ); ?></h1>
-
-		</article>
-		<!-- /article -->
-
-	<?php endif; ?>
-
-	</section>
-	<!-- /section -->
-	</main>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+    <!-- /section -->
+</main>
 
 <?php get_sidebar(); ?>
 

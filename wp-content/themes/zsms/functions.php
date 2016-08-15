@@ -26,9 +26,9 @@ if (function_exists('add_theme_support')) {
 
     // Add Thumbnail Theme Support
     add_theme_support('post-thumbnails');
-    add_image_size('large', 700, '', true); // Large Thumbnail
-    add_image_size('medium', 250, '', true); // Medium Thumbnail
-    add_image_size('small', 120, '', true); // Small Thumbnail
+    add_image_size('large', 1095, '', true); // Large Thumbnail
+    add_image_size('medium', 730, '', true); // Medium Thumbnail
+    add_image_size('small', 365, '', true); // Small Thumbnail
     add_image_size('custom-size', 700, 200, true); // Custom Thumbnail Size call using the_post_thumbnail('custom-size');
 
     // Add Support for Custom Backgrounds - Uncomment below if you're going to use
@@ -86,6 +86,126 @@ function zsms_nav()
     );
 }
 
+function elementary_school_nav()
+{
+    wp_nav_menu(
+        array(
+            'theme_location' => 'elementary-school-menu',
+            'menu' => '',
+            'container' => 'div',
+            'container_class' => 'menu-{menu slug}-container',
+            'container_id' => '',
+            'menu_class' => 'menu',
+            'menu_id' => '',
+            'echo' => true,
+            'fallback_cb' => 'wp_page_menu',
+            'before' => '',
+            'after' => '',
+            'link_before' => '',
+            'link_after' => '',
+            'items_wrap' => '<ul>%3$s</ul>',
+            'depth' => 0,
+            'walker' => ''
+        )
+    );
+}
+
+function school_club_nav()
+{
+    wp_nav_menu(
+        array(
+            'theme_location' => 'school-club-menu',
+            'menu' => '',
+            'container' => 'div',
+            'container_class' => 'menu-{menu slug}-container',
+            'container_id' => '',
+            'menu_class' => 'menu',
+            'menu_id' => '',
+            'echo' => true,
+            'fallback_cb' => 'wp_page_menu',
+            'before' => '',
+            'after' => '',
+            'link_before' => '',
+            'link_after' => '',
+            'items_wrap' => '<ul>%3$s</ul>',
+            'depth' => 0,
+            'walker' => ''
+        )
+    );
+}
+
+function kindergarden_nav()
+{
+    wp_nav_menu(
+        array(
+            'theme_location' => 'kindergarden-menu',
+            'menu' => '',
+            'container' => 'div',
+            'container_class' => 'menu-{menu slug}-container',
+            'container_id' => '',
+            'menu_class' => 'menu',
+            'menu_id' => '',
+            'echo' => true,
+            'fallback_cb' => 'wp_page_menu',
+            'before' => '',
+            'after' => '',
+            'link_before' => '',
+            'link_after' => '',
+            'items_wrap' => '<ul>%3$s</ul>',
+            'depth' => 0,
+            'walker' => ''
+        )
+    );
+}
+
+function parents_club_nav()
+{
+    wp_nav_menu(
+        array(
+            'theme_location' => 'parents-club-menu',
+            'menu' => '',
+            'container' => 'div',
+            'container_class' => 'menu-{menu slug}-container',
+            'container_id' => '',
+            'menu_class' => 'menu',
+            'menu_id' => '',
+            'echo' => true,
+            'fallback_cb' => 'wp_page_menu',
+            'before' => '',
+            'after' => '',
+            'link_before' => '',
+            'link_after' => '',
+            'items_wrap' => '<ul>%3$s</ul>',
+            'depth' => 0,
+            'walker' => ''
+        )
+    );
+}
+
+function dining_nav()
+{
+    wp_nav_menu(
+        array(
+            'theme_location' => 'dining-menu',
+            'menu' => '',
+            'container' => 'div',
+            'container_class' => 'menu-{menu slug}-container',
+            'container_id' => '',
+            'menu_class' => 'menu',
+            'menu_id' => '',
+            'echo' => true,
+            'fallback_cb' => 'wp_page_menu',
+            'before' => '',
+            'after' => '',
+            'link_before' => '',
+            'link_after' => '',
+            'items_wrap' => '<ul>%3$s</ul>',
+            'depth' => 0,
+            'walker' => ''
+        )
+    );
+}
+
 // Load HTML5 Blank scripts (header.php)
 function zsms_header_scripts()
 {
@@ -114,9 +234,6 @@ function zsms_conditional_scripts()
 // Load HTML5 Blank styles
 function zsms_styles()
 {
-    wp_register_style('normalize', get_template_directory_uri() . '/normalize.css', array(), '1.0', 'all');
-    wp_enqueue_style('normalize'); // Enqueue it!
-
     wp_register_style('zsms', get_template_directory_uri() . '/style.css', array(), '1.0', 'all');
     wp_enqueue_style('zsms'); // Enqueue it!
 }
@@ -125,7 +242,12 @@ function zsms_styles()
 function register_html5_menu()
 {
     register_nav_menus(array( // Using array to specify more menus if needed
-        'header-menu' => 'Hlavní menu', // Main Navigation
+        'header-menu' => 'Hlavní menu',
+        'elementary-school-menu' => 'Základní škola menu',
+        'school-club-menu' => 'Družina menu',
+        'kindergarden-menu' => 'Mateřská škola menu',
+        'dining-menu' => 'Jídelna menu',
+        'parents-club-menu' => 'Světýlko menu',
     ));
 }
 
@@ -403,16 +525,20 @@ function html5_shortcode_demo_2($atts, $content = null) // Demo Heading H2 short
     return '<h2>' . $content . '</h2>';
 }
 
-function latest_article($cat_id)
+function latest_article($cat_id, $color)
 {
     $latest_cat_post = new WP_Query(array('posts_per_page' => 1, 'category__in' => array($cat_id)));
     if ($latest_cat_post->have_posts()) {
         while ($latest_cat_post->have_posts()) {
             $latest_cat_post->the_post();
-            echo "<h1>";
+            echo '<article class="row">';
+            echo '<span class="img-container ' . $color . ' col-sm-6">';
+            the_post_thumbnail(array(300, 225));
+            echo '</span><div class="text col-sm-6"><h3><a href="' . get_permalink() . '">';
             the_title();
-            echo "</h1>";
+            echo "</a></h3>";
             the_content();
+            echo "</p></div></article>";
         }
     }
 }
