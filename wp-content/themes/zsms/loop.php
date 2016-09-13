@@ -17,7 +17,7 @@
 		</h2>
 		<!-- /post title -->
 
-		<!-- post details -->
+		<!-- post details
 		<span class="date"><?php the_time('F j, Y'); ?> <?php the_time('g:i a'); ?></span>
 		<span class="author"><?php _e( 'Published by', 'zsms' ); ?> <?php the_author_posts_link(); ?></span>
 		<span class="comments"><?php if (comments_open( get_the_ID() ) ) comments_popup_link( __( 'Leave your thoughts', 'zsms' ), __( '1 Comment', 'zsms' ), __( '% Comments', 'zsms' )); ?></span>
@@ -27,6 +27,8 @@
 
 		<?php edit_post_link(); ?>
 
+		<div class="clearfix"></div>
+		<br /><br />
 	</article>
 	<!-- /article -->
 

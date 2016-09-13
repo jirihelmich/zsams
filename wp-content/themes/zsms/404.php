@@ -1,24 +1,28 @@
 <?php get_header(); ?>
 
-	<main role="main">
-		<!-- section -->
-		<section>
+<main role="main">
+	<!-- section -->
+	<section id="content" class="container-fluid">
+		<div class="row others">
 
-			<!-- article -->
-			<article id="post-404">
-
-				<h1><?php _e( 'Page not found', 'zsms' ); ?></h1>
-				<h2>
-					<a href="<?php echo home_url(); ?>"><?php _e( 'Return home?', 'zsms' ); ?></a>
-				</h2>
-
-			</article>
-			<!-- /article -->
-
-		</section>
-		<!-- /section -->
-	</main>
-
-<?php get_sidebar(); ?>
+			<div class="col-lg-8">
+				<div class="card">
+					<div class="card-header">
+						Stránka nenalezena.
+					</div>
+					<div class="card-block">
+						<a href="<?php echo home_url(); ?>"><?php _e( 'Návrat na hlavní stránku', 'zsms' ); ?></a>
+					</div>
+				</div>
+			</div>
+			<div class="col-lg-4">
+				<?php get_sidebar(); ?>
+			</div>
+		</div>
+	</section>
+	<!-- /section -->
+</main>
 
 <?php get_footer(); ?>
+
+

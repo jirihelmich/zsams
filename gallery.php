@@ -5,8 +5,8 @@ $lines = explode("\n", $lines);
 
 foreach($lines as $line)
 {
-    //$line = iconv("cp1250", "utf-8", $line);
-	if(strpos($line, "CENTER"))
+    $line = iconv("cp1250", "utf-8", $line);
+	if(strpos(strtolower($line), "center"))
 	{
 		echo "<br/><br/>" . strip_tags($line) . "<br/>";
 	}else {

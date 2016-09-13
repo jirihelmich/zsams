@@ -5,7 +5,7 @@
     <section id="content" class="container-fluid">
         <div class="row others">
 
-            <div class="col-sm-8">
+            <div class="col-lg-8">
                 <div class="card">
                     <div class="card-header">
                         <?php the_title(); ?>
@@ -44,13 +44,14 @@
                     </div>
                 </div>
             </div>
+            <div class="col-lg-4">
+                <?php get_sidebar(); ?>
+            </div>
 
         </div>
 
     </section>
     <!-- /section -->
 </main>
-
-<?php get_sidebar(); ?>
 
 <?php get_footer(); ?>

@@ -1,6 +1,6 @@
 /* -- WPPA+ Runtime parameters
 /*
-/* Dynamicly Created on 2016-08-14T15:39:01+00:00
+/* Dynamicly Created on 2016-08-15T14:34:06+00:00
 /*
 */
 
@@ -10,11 +10,11 @@
 	wppaPopupLinkType = "photo";
 	wppaAnimationType = "fadeover";
 	wppaAnimationSpeed = 800;
-	wppaThumbnailAreaDelta = 14;
-	wppaTextFrameDelta = 181;
-	wppaBoxDelta = 14;
+	wppaThumbnailAreaDelta = 12;
+	wppaTextFrameDelta = 329;
+	wppaBoxDelta = 12;
 	wppaSlideShowTimeOut = 2500;
-	wppaPreambule = 5;
+	wppaPreambule = 3;
 	wppaFilmShowGlue = true;
 	wppaSlideShow = "Prezentace";
 	wppaStart = "Start";
@@ -57,14 +57,14 @@
 	wppaSlideWrap = true;
 	wppaEmailRequired = "required";
 	wppaSlideBorderWidth = 0;
-	wppaAllowAjax = true;
+	wppaAllowAjax = false;
 	wppaUsePhotoNamesInUrls = false;
 	wppaThumbTargetBlank = false;
 	wppaRatingMax = 5;
 	wppaRatingDisplayType = "graphic";
 	wppaRatingPrec = 2;
 	wppaStretch = false;
-	wppaMinThumbSpace = 4;
+	wppaMinThumbSpace = 20;
 	wppaThumbSpaceAuto = true;
 	wppaMagnifierCursor = "magnifier-small.png";
 	wppaArtMonkyLink = "none";
@@ -89,7 +89,7 @@
 	wppaOvlHires = false;
 	wppaSlideVideoStart = false;
 	wppaSlideAudioStart = false;
-	wppaAudioHeight = 28;
+	wppaAudioHeight = 16;
 	wppaRel = "data-rel";
 	wppaStartSymbolUrl = "http://localhost:7888/zsams/wp-content/plugins/wp-photo-album-plus/images/start.png";
 	wppaPauseSymbolUrl = "http://localhost:7888/zsams/wp-content/plugins/wp-photo-album-plus/images/pause.png";
@@ -98,10 +98,10 @@
 	wppaStartPauseSymbolBradius = "24";
 	wppaStopSymbolSize = "48";
 	wppaStopSumbolBradius = "24";
-	wppaOvlRadius = 12;
-	wppaOvlBorderWidth = 8;
-	wppaOvlLeftSymbolUrl = "http://localhost:7888/zsams/wp-content/plugins/wp-photo-album-plus/images/prev-black.gif";
-	wppaOvlRightSymbolUrl = "http://localhost:7888/zsams/wp-content/plugins/wp-photo-album-plus/images/next-black.gif";
+	wppaOvlRadius = 0;
+	wppaOvlBorderWidth = 16;
+	wppaOvlLeftSymbolUrl = "http://www.zsamszlicin.cz/wp-content/plugins/wp-photo-album-plus/images/prev-black.gif";
+	wppaOvlRightSymbolUrl = "http://www.zsamszlicin.cz/wp-content/plugins/wp-photo-album-plus/images/next-black.gif";
 	wppaLeftRightSymbolSize = 32;
 	wppaLeftRightSymbolBradius = 4;
 	wppaEditPhotoWidth = "960";

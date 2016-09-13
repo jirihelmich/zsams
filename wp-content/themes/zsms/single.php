@@ -5,7 +5,7 @@
     <section id="content" class="container-fluid">
         <div class="row others">
 
-            <div class="col-sm-8">
+            <div class="col-lg-8">
                 <div class="card">
                     <div class="card-header">
                         <a href="<?php the_permalink(); ?>" title="<?php the_title(); ?>"><?php the_title(); ?></a>
@@ -20,7 +20,7 @@
                                 <!-- post thumbnail -->
                                 <?php if (has_post_thumbnail()) : // Check if Thumbnail exists ?>
                                     <a href="<?php the_permalink(); ?>" title="<?php the_title(); ?>">
-                                        <?php the_post_thumbnail(); // Fullsize image for the single post ?>
+                                        <?php the_post_thumbnail(array(400)); // Fullsize image for the single post ?>
                                     </a>
                                 <?php endif; ?>
                                 <!-- /post thumbnail -->
@@ -55,11 +55,12 @@
                     </div>
                 </div>
             </div>
+            <div class="col-lg-4">
+                <?php get_sidebar(); ?>
+            </div>
         </div>
     </section>
     <!-- /section -->
 </main>
-
-<?php get_sidebar(); ?>
 
 <?php get_footer(); ?>

@@ -290,26 +290,27 @@ function add_slug_to_body_class($classes)
 
 // If Dynamic Sidebar Exists
 if (function_exists('register_sidebar')) {
-    // Define Sidebar Widget Area 1
+
+    // Define Sidebar Widget Area 2
     register_sidebar(array(
-        'name' => __('Widget Area 1', 'zsms'),
-        'description' => __('Description for this widget-area...', 'zsms'),
-        'id' => 'widget-area-1',
-        'before_widget' => '<div id="%1$s" class="%2$s">',
+        'name' => __('Kontakty', 'zsms'),
+        'description' => __('Kontakty na titulní stránce webu', 'zsms'),
+        'id' => 'kontakty-widget',
+        'before_widget' => '<div>',
         'after_widget' => '</div>',
-        'before_title' => '<h3>',
-        'after_title' => '</h3>'
+        'before_title' => '',
+        'after_title' => ''
     ));
 
     // Define Sidebar Widget Area 2
     register_sidebar(array(
-        'name' => __('Widget Area 2', 'zsms'),
-        'description' => __('Description for this widget-area...', 'zsms'),
-        'id' => 'widget-area-2',
-        'before_widget' => '<div id="%1$s" class="%2$s">',
+        'name' => __('Info o škole', 'zsms'),
+        'description' => __('Informace o škole v patičce', 'zsms'),
+        'id' => 'footer-widget',
+        'before_widget' => '<div>',
         'after_widget' => '</div>',
-        'before_title' => '<h3>',
-        'after_title' => '</h3>'
+        'before_title' => '',
+        'after_title' => ''
     ));
 }
 
@@ -532,9 +533,9 @@ function latest_article($cat_id, $color)
         while ($latest_cat_post->have_posts()) {
             $latest_cat_post->the_post();
             echo '<article class="row">';
-            echo '<span class="img-container ' . $color . ' col-sm-6">';
-            the_post_thumbnail(array(300, 225));
-            echo '</span><div class="text col-sm-6"><h3><a href="' . get_permalink() . '">';
+            echo '<div class="col-sm-6 col-xl-5"><span class="img-container ' . $color . '">';
+            the_post_thumbnail(array(365, 266));
+            echo '</span></div><div class="text col-sm-6 col-xl-7"><h3><a href="' . get_permalink() . '">';
             the_title();
             echo "</a></h3>";
             the_content();

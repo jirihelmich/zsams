@@ -7,6 +7,7 @@
 
 		</title><meta http-equiv="x-ua-compatible" content="ie=edge">
 		<link href="https://fonts.googleapis.com/css?family=Roboto:300,400,500,700&amp;subset=latin-ext" rel="stylesheet">
+        <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
 		<link rel="stylesheet" href="<?php echo get_template_directory_uri(); ?>/bootstrap.min.css">
 		<link rel="stylesheet" href="<?php echo get_template_directory_uri(); ?>/style.css">
 
@@ -28,10 +29,9 @@
 
 	</head>
 	<body <?php body_class(); ?>>
-
-		<main id="homepage" class="<?php body_class(); ?>">
+		<main <?php body_class(); ?>>
             <div class="container-fluid">
-                <header>
+                <header class="text-xs-center text-sm-center text-md-left">
 					<a class="home-link" href="<?php echo home_url(); ?>">ZŠ a MŠ Zličín</a>
 					<nav role="navigation">
 						<?php zsms_nav(); ?>
@@ -39,7 +39,7 @@
 					<section id="search">
 						<?php get_template_part('searchform'); ?>
 					</section>
-					<section class="teaser-image">
+					<section class="teaser-image hidden-xs-down">
                         <span class="img-container">
                             <img src="<?php echo get_template_directory_uri(); ?>/img/teaser.jpg" alt="" />
                             <span class="img-container logo">
@@ -47,4 +47,9 @@
                             </span>
                         </span>
 					</section>
+
+					<div class="card-header" style="text-align: center;">
+                        Vítejte na novém webu ZŠ a MŠ Zličín. Prosíme vás o trpělivost během doby, kdy budeme web finalizovat a doplňovat všechny potřebné informace. Děkujeme!
+                    </div>
+
 				</header>
